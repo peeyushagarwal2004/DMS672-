@@ -1,6 +1,5 @@
 """
 Traditional ML model training: Logistic Regression, Random Forest, Extra Trees, XGBoost.
-(Fast execution version: no GridSearch, limited features)
 """
 
 import os

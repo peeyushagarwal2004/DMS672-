@@ -1,7 +1,7 @@
 """
-Data loading and splitting module — THE KEY FIX for data leakage.
+Data loading and splitting module.
 
-Original repo issues fixed:
+Pipeline:
 1. Split FIRST, then resample only the training set
 2. Use the SAME test set across ALL models (ML, DL, BERT)
 3. Proper validation set (separate from test set)

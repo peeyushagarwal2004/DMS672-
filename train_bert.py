@@ -1,11 +1,9 @@
 """
-BERT model training for mental health text classification (PyTorch version).
+BERT model training for mental health text classification (PyTorch).
 
-KEY FIXES from original repo:
-- Uses the SAME train/val/test split as ML and DL models
-- Trains with proper validation set (NOT test set)
-- No inconsistent re-splitting for prediction generation
-- Predictions generated from the same held-out test set
+- Uses the same train/val/test split as ML and DL models
+- Dedicated validation set for early stopping
+- Predictions generated from the held-out test set
 """
 
 import os

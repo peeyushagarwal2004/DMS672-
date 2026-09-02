@@ -1,9 +1,7 @@
 """
 Deep Learning model training: BiLSTM, CNN, CNN-BiLSTM.
 
-KEY FIXES from original repo:
-- Uses VALIDATION set for early stopping (NOT the test set)
-- Uses data from the corrected data_loader (split-first pipeline)
+- Uses dedicated validation set for early stopping
 - Consistent test set across all models
 """
 
