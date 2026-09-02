@@ -5,8 +5,20 @@ Handles cleaning, and stopword removal without hanging on network downloads.
 
 import re
 
-# Hardcoded common English stopwords to avoid NLTK download hangs on Windows
-STOP_WORDS = {
+# Negation / affect-bearing words that must NEVER be removed. For mental-health and
+# sentiment classification these words flip meaning ("not happy" vs "happy"), so
+# stripping them destroys signal and lowers accuracy.
+NEGATION_WORDS = {
+    'no', 'nor', 'not', 'never', 'none', 'nobody', 'nothing', 'neither', 'cannot',
+    "don't", 'dont', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't",
+    'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't",
+    'isn', "isn't", 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't",
+    'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't",
+    'won', "won't", 'wouldn', "wouldn't",
+}
+
+# Hardcoded common English stopwords to avoid NLTK download hangs on Windows.
+_BASE_STOP_WORDS = {
     'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd",
     'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers',
     'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which',
@@ -23,13 +35,16 @@ STOP_WORDS = {
     'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"
 }
 
+# Final stopword list = base stopwords MINUS the negations we want to preserve.
+STOP_WORDS = _BASE_STOP_WORDS - NEGATION_WORDS
+
 def clean_text(text: str) -> str:
     """
     Clean a single text string:
     1. Lowercase
     2. Remove URLs
     3. Remove non-alphabetic characters
-    4. Remove stopwords
+    4. Remove stopwords (but PRESERVE negations — see NEGATION_WORDS)
     (Lemmatization is skipped to ensure script doesn't hang on NLTK downloads)
     """
     if not isinstance(text, str):
@@ -39,6 +54,6 @@ def clean_text(text: str) -> str:
     text = re.sub(r'http\S+|www\S+|https\S+', '', text)
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     tokens = text.split()
-    tokens = [w for w in tokens if w not in STOP_WORDS and len(w) > 1]
-    
+    tokens = [w for w in tokens if w not in STOP_WORDS and (len(w) > 1 or w == 'no')]
+
     return ' '.join(tokens)
