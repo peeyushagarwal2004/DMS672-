@@ -55,7 +55,12 @@ def main():
     y_train, y_test = data['y_train'], data['y_test']
 
     print("\n  Applying TF-IDF Vectorization...")
-    vectorizer = TfidfVectorizer(max_features=config.TFIDF_MAX_FEATURES)
+    vectorizer = TfidfVectorizer(
+        max_features=config.TFIDF_MAX_FEATURES,
+        ngram_range=config.TFIDF_NGRAM_RANGE,
+        min_df=config.TFIDF_MIN_DF,
+        sublinear_tf=True,
+    )
     X_train_tfidf = vectorizer.fit_transform(X_train_clean)
     X_test_tfidf = vectorizer.transform(X_test_clean)
     print(f"  TF-IDF shapes - Train: {X_train_tfidf.shape} | Test: {X_test_tfidf.shape}")
@@ -68,7 +73,7 @@ def main():
         {'name': 'LogisticRegression', 'estimator': LogisticRegression(random_state=config.RANDOM_STATE, class_weight='balanced', max_iter=1000), 'use_encoded_labels': False},
         {'name': 'RandomForest', 'estimator': RandomForestClassifier(n_estimators=100, max_depth=30, random_state=config.RANDOM_STATE, class_weight='balanced', n_jobs=-1), 'use_encoded_labels': False},
         {'name': 'ExtraTrees', 'estimator': ExtraTreesClassifier(n_estimators=100, max_depth=30, random_state=config.RANDOM_STATE, class_weight='balanced', n_jobs=-1), 'use_encoded_labels': False},
-        {'name': 'XGBoost', 'estimator': XGBClassifier(n_estimators=100, max_depth=6, learning_rate=0.1, random_state=config.RANDOM_STATE, use_label_encoder=False, eval_metric='mlogloss', n_jobs=-1), 'use_encoded_labels': True}
+        {'name': 'XGBoost', 'estimator': XGBClassifier(n_estimators=300, max_depth=8, learning_rate=0.1, subsample=0.9, colsample_bytree=0.8, random_state=config.RANDOM_STATE, eval_metric='mlogloss', tree_method='hist', n_jobs=-1), 'use_encoded_labels': True}
     ]
 
     results = []

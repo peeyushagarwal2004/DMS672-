@@ -17,9 +17,11 @@ DATASET_PATHS = {
 }
 
 # Column names per dataset
+# NOTE: dataset2.csv actually has columns [posts, predicted, intensity].
+# The label column is "predicted" — "status" does not exist and used to crash the loader.
 DATASET_COLUMNS = {
     "Dataset1": {"text": "statement", "label": "status"},
-    "Dataset2": {"text": "posts",     "label": "status"},
+    "Dataset2": {"text": "posts",     "label": "predicted"},
     "Dataset3": {"text": "post",      "label": "status"},
 }
 
@@ -34,7 +36,9 @@ MAX_WORDS = 50000               # Vocabulary size for Keras Tokenizer
 BERT_MAX_LEN = 128              # For BERT tokenizer
 
 # ─── ML Model Settings ──────────────────────────────────────────────
-TFIDF_MAX_FEATURES = 5000       # Use all features
+TFIDF_MAX_FEATURES = 30000      # Vocabulary cap for TF-IDF (was 5000 — too small)
+TFIDF_NGRAM_RANGE = (1, 2)      # Unigrams + bigrams capture negation/short phrases
+TFIDF_MIN_DF = 2                # Ignore terms appearing in a single document (noise)
 
 # ─── Deep Learning Settings ─────────────────────────────────────────
 EMBEDDING_DIM = 300             # Word2Vec dimension
@@ -49,4 +53,4 @@ BERT_EPOCHS = 5
 BERT_LEARNING_RATE = 2e-5
 
 # ─── Near-Duplicate Detection ───────────────────────────────────────
-DUPLICATE_SIMILARITY_THRESHOLD = 0.95  # Cosine similarity threshold
+DUPLICATE_SIMILARITY_THRESHOLD = 0.95  # Jaccard similarity on char-trigram sets
