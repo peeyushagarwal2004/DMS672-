@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+bert_checkpoints/
+logs/
+*.zip
+.DS_Store
